@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS review(
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    bid_id UUID REFERENCES bid(id) ON DELETE CASCADE,
+    author VARCHAR(100),
+    description VARCHAR(1000),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

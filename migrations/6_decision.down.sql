@@ -1,0 +1,6 @@
+BEGIN;
+
+DROP TABLE IF EXISTS decision;
+DELETE TYPE IF EXISTS decision_type;
+
+COMMIT;

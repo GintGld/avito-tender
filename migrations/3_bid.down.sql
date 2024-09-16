@@ -1,0 +1,7 @@
+BEGIN;
+
+DROP TABLE IF EXISTS bid;
+DROP TYPE IF EXISTS bid_status_type;
+DROP TYPE IF EXISTS author_type;
+
+COMMIT;

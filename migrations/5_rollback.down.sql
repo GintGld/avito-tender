@@ -1,0 +1,6 @@
+BEGIN;
+
+DROP TABLE IF EXISTS rollback_tender;
+DROP TABLE IF EXISTS rollback_bid;
+
+COMMIT;

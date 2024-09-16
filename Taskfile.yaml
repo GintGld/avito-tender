@@ -1,0 +1,77 @@
+version: '3'
+
+vars:
+  PROJECT_DIR: 
+    sh: pwd
+
+tasks:
+  run-app:
+    label: "run app"
+    desc: "Run app according to .env"
+    summary: |-
+      This task runs app, using
+
+      environment, defined in .env file.
+
+      Make sure, that "CONFIG_PATH", "SECRET", 
+      
+      "ROOT_PASS" are set.
+    dotenv:
+      - .env
+    cmds:
+      - rm -rf ./tmp/*
+      - mkdir -p ./tmp/server ./tmp/man ./tmp/content
+      - go run ./cmd/radio/main.go
+
+  migrate:
+    label: "migrate"
+    desc: "Apply migrations"
+    summary: |-
+      This task apply migrations to 
+
+      database, using "migrations" dir
+    cmd:
+      task: migrate-util
+      vars:
+        STORAGE_PATH: storage/storage.sqlite
+        MIGRATIONS_PATH: migrations
+        MIGRATIONS_TABLE: migrations
+
+  migrate-tests:
+    label: "migrate tests"
+    desc: "Apply migrations for tests"
+    summary: |-
+      This task apply migrations for tests,
+
+      using "tests/migrations" dir.
+    # source:
+    #   tests/migrations/1_reser.up.sql
+    cmd:
+      task: migrate-util
+      vars:
+        STORAGE_PATH: storage/storage.sqlite
+        MIGRATIONS_PATH: tests/migrations
+        MIGRATIONS_TABLE: migrations_test
+
+  migrate-util:
+    label: "migrate util"
+    desc: "Base migrate"
+    summary: |-
+      This task is common migration util,
+
+      used for debug, prod, dev and tests.
+    cmd:
+      go run cmd/migrator/main.go --storage-path='{{.STORAGE_PATH}}' --migrations-path='{{.MIGRATIONS_PATH}}' --migrations-table='{{.MIGRATIONS_TABLE}}'
+
+  mockery:
+    label: gen mock
+    cmd: |-
+      go run mockery
+
+  count-lines:
+    label: "lines"
+    desc: "Count lines in repo"
+    summary: |-
+      This task counts lines in repository.
+    cmd:
+      git ls-files | xargs wc -l
